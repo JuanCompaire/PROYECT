@@ -8,6 +8,8 @@ from objects.Gamestart_message import Gamestart_message
 from objects.Grass import Grass
 from objects.Purchase_button import Purchase_button
 from objects.Sunflower import Sunflower
+from objects.Peashooter import Peashooter
+from objects.Wallnutt import Wallnutt
 #TO RUN THE GAME
 pygame.init()
 
@@ -17,6 +19,7 @@ running = True
 gameover = False
 gamestarted = False
 show_text_menu = False
+not_enough_sun = False
 
 assets.load_images()
 
@@ -31,14 +34,21 @@ text_rect = text_surface.get_rect()
 text_rect.center = (configs.SCREEN_WIDTH // 2, configs.SCREEN_HEIGHT // 2+300)
 show_text_menu = True
 #SUNS COUNT
-sun_count = 25
+sun_count = 200
 sun_count_image = assets.get_image("sol")
 sun_count_image = pygame.transform.scale(sun_count_image, (50, 50))
 font_sun_count = pygame.font.Font(None, 36)
-sun_count_color = (0,0, 0)  # Color amarillo para los soles
+sun_count_color = (0,0, 0)
+#NOT ENOUGH SUNS INDICATOR
+not_enough_sun_color = (255, 0, 0)
+#MOVE ITEMS
+
+
 
 #OBJECTS LIST
 sunflower_list = []
+peashooter_list = []
+wallnutt_list = []
 
 # ITERATION VARIABLES
 NUM_ROW_GRASS = 9;
@@ -63,14 +73,25 @@ for row in range(NUM_COLUMN_GRASS):
         Grass(sprites, num_grass=grass_number, placed=False, X=grass_x, Y=grass_y)
 
 #FUNCTIONS
-def add_new_sunflower(x,y):
-    new_sunflower = Sunflower(sprites, X=x, Y=y)
+
+def generate_sunflower():
+    new_sunflower = Sunflower(sprites, X=700, Y=20)
     sunflower_list.append(new_sunflower)
 
+def generate_peashooter():
+    new_peashooter = Peashooter(sprites, X=550, Y=20)
+    peashooter_list.append(new_peashooter)
 
+def generate_wallnutt():
+    new_wallnutt = Wallnutt(sprites, X=850, Y=20)
+    wallnutt_list.append(new_wallnutt)
 
+#GAME LOOP
 while running:
+
+
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             running = False
         #WHEN WE PRESS A KEY
@@ -83,11 +104,71 @@ while running:
 
         # WHEN THE GAME START
         if gamestarted:
+
             # WHEN WE CLICK
             if event.type == pygame.MOUSEBUTTONDOWN:
-                #TO GENERATE A SUNFLOWE WHEN WE PURCHASE IT
-                if event.button == 1 and purchase_button_Sunflower.rect.collidepoint(event.pos):
-                    add_new_sunflower(300,300)
+                #WHEN WE LEFT CLICK
+                if event.button == 1:
+                    #TO GENERATE A SUNFLOWER WHEN WE PURCHASE IT
+                    if  purchase_button_Sunflower.rect.collidepoint(event.pos) and sun_count >= Sunflower.COST:
+                        generate_sunflower( )
+                        sun_count -= Sunflower.COST
+                        not_enough_sun = False
+                    #TO GENERATE A PEASHOOTER WHEN WE PURCHASE IT
+                    elif purchase_button_Peashotter.rect.collidepoint(event.pos) and sun_count >= Peashooter.COST:
+                        generate_peashooter()
+                        sun_count -= Peashooter.COST
+                        not_enough_sun = False
+                    #TO GENERATE A WALLNUTT WHEN WE PURCHASE IT
+                    elif purchase_button_Wallnutt.rect.collidepoint(event.pos) and sun_count >= Wallnutt.COST:
+                        generate_wallnutt()
+                        sun_count -= Wallnutt.COST
+                        not_enough_sun = False
+                    #WHEN YOU DONT HAVE ENOUGH SUNS
+                    elif purchase_button_Sunflower.rect.collidepoint(event.pos) and sun_count < Sunflower.COST or purchase_button_Peashotter.rect.collidepoint(event.pos) and sun_count < Peashooter.COST or purchase_button_Wallnutt.rect.collidepoint(event.pos) and sun_count < Wallnutt.COST:
+                        not_enough_sun = True
+                    #TO MOVE A SUNFLOWER
+                    for sunflower in sunflower_list:
+                        if sunflower.rect.collidepoint(event.pos):
+                            sunflower.set_moving(True)
+                    #TO MOVE A PEASHOOTER
+                    for peashooter in peashooter_list:
+                        if peashooter.rect.collidepoint(event.pos):
+                            peashooter.set_moving(True)
+                    #TO MOVE A WALLNUTT
+                    for wallnutt in wallnutt_list:
+                        if wallnutt.rect.collidepoint(event.pos):
+                            wallnutt.set_moving(True)
+            # WHEN DRAG
+            elif event.type == pygame.MOUSEMOTION:
+                #TO MOVE A SUNFLOWER
+                for sunflower in sunflower_list:
+                    if sunflower.moving:
+                        sunflower.move(event.pos[0], event.pos[1])
+                #TO MOVE A PEASHOOTER
+                for peashooter in peashooter_list:
+                    if peashooter.moving:
+                        peashooter.move(event.pos[0], event.pos[1])
+                #TO MOVE A WALLNUTT
+                for wallnutt in wallnutt_list:
+                    if wallnutt.moving:
+                        wallnutt.move(event.pos[0], event.pos[1])
+
+            #WHEN WE RELEASE THE CLICK
+            elif event.type == pygame.MOUSEBUTTONUP:
+                #TO MOVE A SUNFLOWER
+                for sunflower in sunflower_list:
+                    if sunflower.moving:
+                        sunflower.set_moving(False)
+                #TO MOVE A PEASHOOTER
+                for peashooter in peashooter_list:
+                    if peashooter.moving:
+                        peashooter.set_moving(False)
+                #TO MOVE A WALLNUTT
+                for wallnutt in wallnutt_list:
+                    if wallnutt.moving:
+                        wallnutt.set_moving(False)
+
 
 
     screen.fill("orange")
@@ -96,18 +177,27 @@ while running:
     #TO SHOW THE SUNS COUNT
     screen.blit(sun_count_image, (1150, 20))
 
+
     sun_count_text = font_sun_count.render(str(sun_count), True, sun_count_color)
-    screen.blit(sun_count_text, (1120, 35))
+    screen.blit(sun_count_text, (1100, 35))
     #TO SHOW THE TEXT MENU
     if show_text_menu:
         screen.blit(text_surface, text_rect)
 
+    if not_enough_sun:
+        not_enough_sun_text = font_sun_count.render("NOT ENOUGH SUNS", True, not_enough_sun_color)
+        screen.blit(not_enough_sun_text, (1050, 85))
 
     if not gameover:
         sprites.update()
 
     pygame.display.flip()
     clock.tick(configs.FPS)
+
+
+
+
+
 
 
 
