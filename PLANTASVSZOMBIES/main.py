@@ -22,6 +22,7 @@ show_text_menu = False
 not_enough_sun = False
 
 assets.load_images()
+assets.load_gif()
 
 sprites = pygame.sprite.LayeredUpdates()
 #MENU PRE_GAME
@@ -41,14 +42,12 @@ font_sun_count = pygame.font.Font(None, 36)
 sun_count_color = (0,0, 0)
 #NOT ENOUGH SUNS INDICATOR
 not_enough_sun_color = (255, 0, 0)
-#MOVE ITEMS
-
-
 
 #OBJECTS LIST
 sunflower_list = []
 peashooter_list = []
 wallnutt_list = []
+grass_list = []
 
 # ITERATION VARIABLES
 NUM_ROW_GRASS = 9;
@@ -67,23 +66,27 @@ purchase_button_Wallnutt = Purchase_button(sprites,image_name="wallnutt_purchase
 
 for row in range(NUM_COLUMN_GRASS):
     for col in range(NUM_ROW_GRASS):
-        grass_number = row * NUM_COLUMN_GRASS + col + 1
-        grass_x = start_x + col * (grass_width )
-        grass_y = start_y + row * (grass_height )
-        Grass(sprites, num_grass=grass_number, placed=False, X=grass_x, Y=grass_y)
+        grass_number = row * NUM_ROW_GRASS + col + 1
+        grass_x = start_x + col * grass_width
+        grass_y = start_y + row * grass_height
+        new_grass = Grass(sprites, num_grass=grass_number, placed=False, X=grass_x, Y=grass_y)
+        grass_list.append(new_grass)
+
+
+
 
 #FUNCTIONS
 
 def generate_sunflower():
-    new_sunflower = Sunflower(sprites, X=700, Y=20)
+    new_sunflower = Sunflower(sprites, X=720, Y=130)
     sunflower_list.append(new_sunflower)
 
 def generate_peashooter():
-    new_peashooter = Peashooter(sprites, X=550, Y=20)
+    new_peashooter = Peashooter(sprites, X=570, Y=130)
     peashooter_list.append(new_peashooter)
 
 def generate_wallnutt():
-    new_wallnutt = Wallnutt(sprites, X=850, Y=20)
+    new_wallnutt = Wallnutt(sprites, X=870, Y=130)
     wallnutt_list.append(new_wallnutt)
 
 #GAME LOOP
@@ -109,9 +112,15 @@ while running:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 #WHEN WE LEFT CLICK
                 if event.button == 1:
+                    #TO GET INFO ABOUT GRASS BLOCK
+                    for grass in grass_list:
+                        if grass.rect.collidepoint(event.pos):
+                            print(grass.num_grass)
+                    
+
                     #TO GENERATE A SUNFLOWER WHEN WE PURCHASE IT
                     if  purchase_button_Sunflower.rect.collidepoint(event.pos) and sun_count >= Sunflower.COST:
-                        generate_sunflower( )
+                        generate_sunflower()
                         sun_count -= Sunflower.COST
                         not_enough_sun = False
                     #TO GENERATE A PEASHOOTER WHEN WE PURCHASE IT

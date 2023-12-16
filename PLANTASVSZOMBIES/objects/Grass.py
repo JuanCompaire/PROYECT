@@ -15,7 +15,7 @@ class Grass(pygame.sprite.Sprite):
         self.X = X
         self.Y = Y
 
-        self.image = pygame.Surface((WIDTH,HEIGHT))
-        self.image.fill((169,169,169))
+        self.image = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        self.image.fill((0, 0, 0, 0))
 
-        self.rect = self.image.get_rect(topleft=(X,Y))
+        self.rect = self.image.get_rect(topleft=(X, Y))
