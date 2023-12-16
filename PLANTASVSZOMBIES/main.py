@@ -69,7 +69,7 @@ for row in range(NUM_COLUMN_GRASS):
         grass_number = row * NUM_ROW_GRASS + col + 1
         grass_x = start_x + col * grass_width
         grass_y = start_y + row * grass_height
-        new_grass = Grass(sprites, num_grass=grass_number, placed=False, X=grass_x, Y=grass_y)
+        new_grass = Grass(sprites, num_grass=grass_number, occupied=False, X=grass_x, Y=grass_y)
         grass_list.append(new_grass)
 
 
@@ -78,7 +78,7 @@ for row in range(NUM_COLUMN_GRASS):
 #FUNCTIONS
 
 def generate_sunflower():
-    new_sunflower = Sunflower(sprites, X=720, Y=130)
+    new_sunflower = Sunflower(sprites, X=720, Y=130, placed=False)
     sunflower_list.append(new_sunflower)
 
 def generate_peashooter():
@@ -138,7 +138,7 @@ while running:
                         not_enough_sun = True
                     #TO MOVE A SUNFLOWER
                     for sunflower in sunflower_list:
-                        if sunflower.rect.collidepoint(event.pos):
+                        if sunflower.rect.collidepoint(event.pos) and sunflower.placed == False:
                             sunflower.set_moving(True)
                     #TO MOVE A PEASHOOTER
                     for peashooter in peashooter_list:
@@ -165,18 +165,24 @@ while running:
 
             #WHEN WE RELEASE THE CLICK
             elif event.type == pygame.MOUSEBUTTONUP:
-                #TO MOVE A SUNFLOWER
-                for sunflower in sunflower_list:
-                    if sunflower.moving:
-                        sunflower.set_moving(False)
-                #TO MOVE A PEASHOOTER
-                for peashooter in peashooter_list:
-                    if peashooter.moving:
-                        peashooter.set_moving(False)
-                #TO MOVE A WALLNUTT
-                for wallnutt in wallnutt_list:
-                    if wallnutt.moving:
-                        wallnutt.set_moving(False)
+                for grass in grass_list:
+                    #TO MOVE A SUNFLOWER
+                    for sunflower in sunflower_list:
+                            if sunflower.rect.colliderect(grass.rect):
+                                sunflower.rect.x = grass.rect.x
+                                sunflower.rect.y = grass.rect.y
+                                sunflower.placed = True
+                                sunflower.set_moving(False)
+                                grass.occupied = True
+
+                    #TO MOVE A PEASHOOTER
+                    for peashooter in peashooter_list:
+                        if peashooter.moving:
+                            peashooter.set_moving(False)
+                    #TO MOVE A WALLNUTT
+                    for wallnutt in wallnutt_list:
+                        if wallnutt.moving:
+                            wallnutt.set_moving(False)
 
 
 
