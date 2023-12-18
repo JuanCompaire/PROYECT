@@ -10,10 +10,11 @@ class Wallnutt(pygame.sprite.Sprite):
     HP = 350
     COST = 50
     moving = False
-    def __init__(self, *groups, X, Y):
+    def __init__(self, *groups, X, Y,placed):
         super().__init__(*groups)
         self.X = X
         self.Y = Y
+        self.placed = placed
         original_image = assets.get_image("cacahuete1")
         self.image = pygame.transform.scale(original_image, (WIDTH, HEIGHT))
         self.rect = self.image.get_rect(topleft=(X, Y))

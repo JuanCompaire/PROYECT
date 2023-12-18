@@ -10,10 +10,11 @@ class Peashooter(pygame.sprite.Sprite):
     HP = 100
     COST = 100
     moving = False
-    def __init__(self, *groups, X, Y):
+    def __init__(self, *groups, X, Y,placed):
         super().__init__(*groups)
         self.X = X
         self.Y = Y
+        self.placed = placed
         original_image = assets.get_image("planta_militar")
         self.image = pygame.transform.scale(original_image, (WIDTH, HEIGHT))
         self.rect = self.image.get_rect(topleft=(X, Y))

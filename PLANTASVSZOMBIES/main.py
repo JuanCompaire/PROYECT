@@ -82,11 +82,11 @@ def generate_sunflower():
     sunflower_list.append(new_sunflower)
 
 def generate_peashooter():
-    new_peashooter = Peashooter(sprites, X=570, Y=130)
+    new_peashooter = Peashooter(sprites, X=570, Y=130, placed=False)
     peashooter_list.append(new_peashooter)
 
 def generate_wallnutt():
-    new_wallnutt = Wallnutt(sprites, X=870, Y=130)
+    new_wallnutt = Wallnutt(sprites, X=870, Y=130, placed=False)
     wallnutt_list.append(new_wallnutt)
 
 #GAME LOOP
@@ -142,11 +142,11 @@ while running:
                             sunflower.set_moving(True)
                     #TO MOVE A PEASHOOTER
                     for peashooter in peashooter_list:
-                        if peashooter.rect.collidepoint(event.pos):
+                        if peashooter.rect.collidepoint(event.pos) and peashooter.placed == False:
                             peashooter.set_moving(True)
                     #TO MOVE A WALLNUTT
                     for wallnutt in wallnutt_list:
-                        if wallnutt.rect.collidepoint(event.pos):
+                        if wallnutt.rect.collidepoint(event.pos) and wallnutt.placed == False:
                             wallnutt.set_moving(True)
             # WHEN DRAG
             elif event.type == pygame.MOUSEMOTION:
@@ -177,8 +177,12 @@ while running:
 
                     #TO MOVE A PEASHOOTER
                     for peashooter in peashooter_list:
-                        if peashooter.moving:
-                            peashooter.set_moving(False)
+                            if peashooter.rect.colliderect(grass.rect):
+                                peashooter.rect.x = grass.rect.x
+                                peashooter.rect.y = grass.rect.y
+                                peashooter.placed = True
+                                peashooter.set_moving(False)
+                                grass.occupied = True
                     #TO MOVE A WALLNUTT
                     for wallnutt in wallnutt_list:
                         if wallnutt.moving:
