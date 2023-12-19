@@ -2,11 +2,12 @@ import pygame.sprite
 
 import assets
 
-WIDTH = 70
-HEIGHT = 70
-sun_count = 50
+WIDTH = 45
+HEIGHT = 45
+
 
 class Sun(pygame.sprite.Sprite):
+    sun_points = 50
     def __init__(self,*groups,X,Y):
         super().__init__(*groups)
 

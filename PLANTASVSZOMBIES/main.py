@@ -10,6 +10,7 @@ from objects.Purchase_button import Purchase_button
 from objects.Sunflower import Sunflower
 from objects.Peashooter import Peashooter
 from objects.Wallnutt import Wallnutt
+from objects.Sun import Sun
 #TO RUN THE GAME
 pygame.init()
 
@@ -47,6 +48,7 @@ not_enough_sun_color = (255, 0, 0)
 sunflower_list = []
 peashooter_list = []
 wallnutt_list = []
+sun_generated_list = []
 grass_list = []
 
 # ITERATION VARIABLES
@@ -72,9 +74,6 @@ for row in range(NUM_COLUMN_GRASS):
         new_grass = Grass(sprites, num_grass=grass_number, occupied=False, X=grass_x, Y=grass_y)
         grass_list.append(new_grass)
 
-
-
-
 #FUNCTIONS
 
 def generate_sunflower():
@@ -88,6 +87,16 @@ def generate_peashooter():
 def generate_wallnutt():
     new_wallnutt = Wallnutt(sprites, X=870, Y=130, placed=False)
     wallnutt_list.append(new_wallnutt)
+
+#IMPROVE THIS FUNCTION
+def generate_sun():
+    for sunflower in sunflower_list:
+        if sunflower.generate_sun:
+            new_sun = Sun(sprites, X=sunflower.rect.x + 50, Y=sunflower.rect.y - 30)
+            sun_generated_list.append(new_sun)
+            sunflower.generate_sun = False
+
+
 
 #GAME LOOP
 while running:
@@ -108,6 +117,14 @@ while running:
         # WHEN THE GAME START
         if gamestarted:
 
+            current_time = pygame.time.get_ticks()
+
+            for sunflower in sunflower_list:
+                sunflower.generate_suns(current_time)
+                if sunflower.generate_sun:
+                    generate_sun()
+                    sunflower.generate_sun = False
+
             # WHEN WE CLICK
             if event.type == pygame.MOUSEBUTTONDOWN:
                 #WHEN WE LEFT CLICK
@@ -116,7 +133,6 @@ while running:
                     for grass in grass_list:
                         if grass.rect.collidepoint(event.pos):
                             print(grass.num_grass)
-                    
 
                     #TO GENERATE A SUNFLOWER WHEN WE PURCHASE IT
                     if  purchase_button_Sunflower.rect.collidepoint(event.pos) and sun_count >= Sunflower.COST:
@@ -191,11 +207,14 @@ while running:
                             wallnutt.placed = True
                             wallnutt.set_moving(False)
                             grass.occupied = True
+                    #TO TAKE A SUN WHEN WE CLICK IT
+                    for sun in sun_generated_list:
+                        if sun.rect.collidepoint(event.pos):
+                            sun.kill()
+                            sun_count += Sun.sun_points
+                            sun_generated_list.remove(sun)
 
-                        
-
-
-
+    #TO SHOW THE BACKGROUND
     screen.fill("orange")
 
     sprites.draw(screen)
@@ -218,13 +237,6 @@ while running:
 
     pygame.display.flip()
     clock.tick(configs.FPS)
-
-
-
-
-
-
-
 
 pygame.quit()
 
