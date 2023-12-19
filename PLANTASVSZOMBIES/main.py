@@ -168,25 +168,31 @@ while running:
                 for grass in grass_list:
                     #TO MOVE A SUNFLOWER
                     for sunflower in sunflower_list:
-                            if sunflower.rect.colliderect(grass.rect):
-                                sunflower.rect.x = grass.rect.x
-                                sunflower.rect.y = grass.rect.y
-                                sunflower.placed = True
-                                sunflower.set_moving(False)
-                                grass.occupied = True
+                        if sunflower.rect.colliderect(grass.rect):
+                            sunflower.rect.x = grass.rect.x
+                            sunflower.rect.y = grass.rect.y
+                            sunflower.placed = True
+                            sunflower.set_moving(False)
+                            grass.occupied = True
 
                     #TO MOVE A PEASHOOTER
                     for peashooter in peashooter_list:
-                            if peashooter.rect.colliderect(grass.rect):
-                                peashooter.rect.x = grass.rect.x
-                                peashooter.rect.y = grass.rect.y
-                                peashooter.placed = True
-                                peashooter.set_moving(False)
-                                grass.occupied = True
+                        if peashooter.rect.colliderect(grass.rect):
+                            peashooter.rect.x = grass.rect.x
+                            peashooter.rect.y = grass.rect.y
+                            peashooter.placed = True
+                            peashooter.set_moving(False)
+                            grass.occupied = True
                     #TO MOVE A WALLNUTT
                     for wallnutt in wallnutt_list:
-                        if wallnutt.moving:
+                        if wallnutt.rect.colliderect(grass.rect):
+                            wallnutt.rect.x = grass.rect.x
+                            wallnutt.rect.y = grass.rect.y
+                            wallnutt.placed = True
                             wallnutt.set_moving(False)
+                            grass.occupied = True
+
+                        
 
 
 

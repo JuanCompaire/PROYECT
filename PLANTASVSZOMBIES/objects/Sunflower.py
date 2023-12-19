@@ -10,6 +10,8 @@ class Sunflower(pygame.sprite.Sprite):
     HP = 20
     COST = 50
     moving = False
+
+
     def __init__(self, *groups, X, Y,placed):
         super().__init__(*groups)
         self.X = X
@@ -24,7 +26,13 @@ class Sunflower(pygame.sprite.Sprite):
     def move(self, x, y):
         self.rect.x = x -(WIDTH/2)
         self.rect.y = y -(HEIGHT/2)
+       
 
 
     def set_moving(self, value):
         self.moving = value
+
+    def generate_suns(self):
+        pass
+        
+    
