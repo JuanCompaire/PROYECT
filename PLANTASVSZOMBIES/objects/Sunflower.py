@@ -10,7 +10,7 @@ class Sunflower(pygame.sprite.Sprite):
     COST = 50
     moving = False
     generate_sun = False
-    generation_time = 5
+    generation_time = 20
 
     def __init__(self, *groups, X, Y, placed):
         super().__init__(*groups)
@@ -20,7 +20,8 @@ class Sunflower(pygame.sprite.Sprite):
         original_image = assets.get_image("girasol")
         self.image = pygame.transform.scale(original_image, (WIDTH, HEIGHT))
         self.rect = self.image.get_rect(topleft=(X, Y))
-        self.start_time = 0
+        self.start_time = pygame.time.get_ticks()
+        self.elapsed_time = 0
 
     def move(self, x, y):
         self.rect.x = x - (WIDTH / 2)
@@ -31,9 +32,9 @@ class Sunflower(pygame.sprite.Sprite):
 
     def generate_suns(self, current_time):
         if self.placed:
-            elapsed_time = (current_time - self.start_time) // 1000
+            self.elapsed_time = (current_time - self.start_time) // 1000
 
             # Verifica si han pasado 5 segundos o más
-            if elapsed_time >= self.generation_time:
+            if self.elapsed_time >= self.generation_time:
                 self.generate_sun = True
                 self.start_time = current_time
