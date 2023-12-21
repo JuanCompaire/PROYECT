@@ -221,6 +221,11 @@ while running:
     #TO SHOW THE SUNS COUNT
     screen.blit(sun_count_image, (1150, 20))
 
+    #TO SHOW THE SHOVEL BUTTON
+    shovel_button = assets.get_image("pala")
+    shovel_button = pygame.transform.scale(shovel_button, (85, 85))
+    screen.blit(shovel_button, (1290, 780))
+
 
     sun_count_text = font_sun_count.render(str(sun_count), True, sun_count_color)
     screen.blit(sun_count_text, (1100, 35))
