@@ -11,6 +11,7 @@ from objects.Sunflower import Sunflower
 from objects.Peashooter import Peashooter
 from objects.Wallnutt import Wallnutt
 from objects.Sun import Sun
+from objects.Shovel import Shovel
 #TO RUN THE GAME
 pygame.init()
 
@@ -74,21 +75,27 @@ for row in range(NUM_COLUMN_GRASS):
         new_grass = Grass(sprites, num_grass=grass_number, occupied=False, X=grass_x, Y=grass_y)
         grass_list.append(new_grass)
 
+#CREATION OF THE SHOVEL
+shovel_game = Shovel(sprites,X=1290,Y=780,using=False)
+
+
 #FUNCTIONS
 
+#GENERATE SUNFLOWER
 def generate_sunflower():
     new_sunflower = Sunflower(sprites, X=720, Y=130, placed=False)
     sunflower_list.append(new_sunflower)
 
+#GENERATE PEASHOOTER
 def generate_peashooter():
     new_peashooter = Peashooter(sprites, X=570, Y=130, placed=False)
     peashooter_list.append(new_peashooter)
 
+#GENERATE WALLNUTT
 def generate_wallnutt():
     new_wallnutt = Wallnutt(sprites, X=870, Y=130, placed=False)
     wallnutt_list.append(new_wallnutt)
-
-#IMPROVE THIS FUNCTION
+#GENERATE SUNS FROM SUNFLOWERS
 def generate_sun():
     for sunflower in sunflower_list:
         if sunflower.generate_sun:
@@ -129,10 +136,17 @@ while running:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 #WHEN WE LEFT CLICK
                 if event.button == 1:
+                    #TO GET THE SHOVEL CLICKING ON SHOVEL BUTTON
+                    if shovel_button.get_rect(topleft=(1290, 780)).collidepoint(event.pos) and shovel_game.using == False:
+                        shovel_game.rect.x = 1290
+                        shovel_game.rect.y = 780
+                        shovel_game.set_using(True)
+
                     #TO GET INFO ABOUT GRASS BLOCK
                     for grass in grass_list:
                         if grass.rect.collidepoint(event.pos):
                             print(grass.num_grass)
+                            print(grass.occupied)
 
                     #TO GENERATE A SUNFLOWER WHEN WE PURCHASE IT
                     if  purchase_button_Sunflower.rect.collidepoint(event.pos) and sun_count >= Sunflower.COST:
@@ -166,6 +180,9 @@ while running:
                             wallnutt.set_moving(True)
             # WHEN DRAG
             elif event.type == pygame.MOUSEMOTION:
+                #TO MOVE THE SHOVEL
+                if shovel_game.using:
+                    shovel_game.move(event.pos[0], event.pos[1])
                 #TO MOVE A SUNFLOWER
                 for sunflower in sunflower_list:
                     if sunflower.moving:
@@ -181,6 +198,11 @@ while running:
 
             #WHEN WE RELEASE THE CLICK
             elif event.type == pygame.MOUSEBUTTONUP:
+                #TO STOP USING THE SHOVEL
+                if shovel_game.using:
+                    shovel_game.rect.x = 1290
+                    shovel_game.rect.y = 780
+                    shovel_game.set_using(False)
                 for grass in grass_list:
                     #TO MOVE A SUNFLOWER
                     for sunflower in sunflower_list:
@@ -190,6 +212,10 @@ while running:
                             sunflower.placed = True
                             sunflower.set_moving(False)
                             grass.occupied = True
+                        #TO DELETE A SUNFLOWER
+                        elif sunflower.rect.collidepoint(shovel_game.rect.x and shovel_game.rect.y) and sunflower.placed == False:
+                            sunflower.kill()
+                            sunflower_list.remove(sunflower)
 
                     #TO MOVE A PEASHOOTER
                     for peashooter in peashooter_list:
