@@ -198,12 +198,12 @@ while running:
 
             #WHEN WE RELEASE THE CLICK
             elif event.type == pygame.MOUSEBUTTONUP:
-                #TO STOP USING THE SHOVEL
-                if shovel_game.using:
-                    shovel_game.rect.x = 1290
-                    shovel_game.rect.y = 780
-                    shovel_game.set_using(False)
+
+
+                shovel_collision_rect = pygame.Rect(shovel_game.rect.x + 10, shovel_game.rect.y + 50, 65, 30)
+
                 for grass in grass_list:
+
                     #TO MOVE A SUNFLOWER
                     for sunflower in sunflower_list:
                         if sunflower.rect.colliderect(grass.rect):
@@ -212,10 +212,23 @@ while running:
                             sunflower.placed = True
                             sunflower.set_moving(False)
                             grass.occupied = True
-                        #TO DELETE A SUNFLOWER
-                        elif sunflower.rect.collidepoint(shovel_game.rect.x and shovel_game.rect.y) and sunflower.placed == False:
-                            sunflower.kill()
-                            sunflower_list.remove(sunflower)
+                            sunflower.num_grass = grass.num_grass
+                            break
+                            shovel_game.set_using(False)
+                            shovel_game.rect.x = 1290
+                            shovel_game.rect.y = 780
+
+                        elif shovel_collision_rect.colliderect(sunflower.rect) and shovel_game.using:
+                            if(grass.num_grass == sunflower.num_grass):
+                                grass.occupied = False
+                                sunflower.kill()
+                                sunflower_list.remove(sunflower)
+                                sun_count += (Sunflower.COST/2)
+                                break
+                            shovel_game.set_using(False)
+                            shovel_game.rect.x = 1290
+                            shovel_game.rect.y = 780
+
 
                     #TO MOVE A PEASHOOTER
                     for peashooter in peashooter_list:
@@ -225,6 +238,8 @@ while running:
                             peashooter.placed = True
                             peashooter.set_moving(False)
                             grass.occupied = True
+                            break
+
                     #TO MOVE A WALLNUTT
                     for wallnutt in wallnutt_list:
                         if wallnutt.rect.colliderect(grass.rect):
@@ -233,12 +248,20 @@ while running:
                             wallnutt.placed = True
                             wallnutt.set_moving(False)
                             grass.occupied = True
+                            break
+
                     #TO TAKE A SUN WHEN WE CLICK IT
                     for sun in sun_generated_list:
                         if sun.rect.collidepoint(event.pos):
                             sun.kill()
                             sun_count += Sun.sun_points
                             sun_generated_list.remove(sun)
+
+            # TO STOP USING THE SHOVEL
+                if shovel_game.using:
+                    shovel_game.rect.x = 1290
+                    shovel_game.rect.y = 780
+                    shovel_game.set_using(False)
 
     #TO SHOW THE BACKGROUND
     screen.fill("orange")

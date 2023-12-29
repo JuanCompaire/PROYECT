@@ -17,6 +17,7 @@ class Sunflower(pygame.sprite.Sprite):
         self.X = X
         self.Y = Y
         self.placed = placed
+        self.num_grass = -1
         original_image = assets.get_image("girasol")
         self.image = pygame.transform.scale(original_image, (WIDTH, HEIGHT))
         self.rect = self.image.get_rect(topleft=(X, Y))
