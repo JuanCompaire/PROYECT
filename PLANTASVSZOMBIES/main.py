@@ -206,28 +206,34 @@ while running:
 
                     #TO MOVE A SUNFLOWER
                     for sunflower in sunflower_list:
-                        if sunflower.rect.colliderect(grass.rect):
+                        if sunflower.rect.colliderect(grass.rect) and grass.occupied == False:
                             sunflower.rect.x = grass.rect.x
                             sunflower.rect.y = grass.rect.y
                             sunflower.placed = True
                             sunflower.set_moving(False)
                             grass.occupied = True
                             sunflower.num_grass = grass.num_grass
-                            break
+
                             shovel_game.set_using(False)
                             shovel_game.rect.x = 1290
                             shovel_game.rect.y = 780
+                            break
 
-                        elif shovel_collision_rect.colliderect(sunflower.rect) and shovel_game.using:
-                            if(grass.num_grass == sunflower.num_grass):
-                                grass.occupied = False
+                        elif shovel_collision_rect.colliderect(sunflower.rect) and shovel_game.using and grass.occupied == True:
+                                numero_casilla_prueba = sunflower.num_grass
                                 sunflower.kill()
                                 sunflower_list.remove(sunflower)
                                 sun_count += (Sunflower.COST/2)
+                                shovel_game.set_using(False)
+                                shovel_game.rect.x = 1290
+                                shovel_game.rect.y = 780
+                                print(numero_casilla_prueba)
+
+                                if(grass.num_grass == numero_casilla_prueba):
+                                    grass.occupied = False
+
                                 break
-                            shovel_game.set_using(False)
-                            shovel_game.rect.x = 1290
-                            shovel_game.rect.y = 780
+
 
 
                     #TO MOVE A PEASHOOTER
