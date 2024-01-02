@@ -199,7 +199,6 @@ while running:
             #WHEN WE RELEASE THE CLICK
             elif event.type == pygame.MOUSEBUTTONUP:
 
-                sunflower_collision_rect = pygame.Rect(sunflower.rect.x + 10, sunflower.rect.y + 50, 65, 30)
                 shovel_collision_rect = pygame.Rect(shovel_game.rect.x + 10, shovel_game.rect.y + 50, 65, 30)
 
                 for grass in grass_list:
@@ -228,33 +227,65 @@ while running:
                                 shovel_game.rect.x = 1290
                                 shovel_game.rect.y = 780
                                 print(numero_casilla_prueba)
-
                                 if(grass.num_grass == numero_casilla_prueba):
                                     grass.occupied = False
-
                                 break
-
-
 
                     #TO MOVE A PEASHOOTER
                     for peashooter in peashooter_list:
-                        if peashooter.rect.colliderect(grass.rect):
+                        if peashooter.rect.colliderect(grass.rect) and grass.occupied == False:
                             peashooter.rect.x = grass.rect.x
                             peashooter.rect.y = grass.rect.y
                             peashooter.placed = True
                             peashooter.set_moving(False)
                             grass.occupied = True
+                            peashooter.num_grass = grass.num_grass
+
+                            shovel_game.set_using(False)
+                            shovel_game.rect.x = 1290
+                            shovel_game.rect.y = 780
                             break
+
+                        elif shovel_collision_rect.colliderect(peashooter.rect) and shovel_game.using and grass.occupied == True:
+                                numero_casilla_prueba = peashooter.num_grass
+                                peashooter.kill()
+                                peashooter_list.remove(peashooter)
+                                sun_count += (Peashooter.COST/2)
+                                shovel_game.set_using(False)
+                                shovel_game.rect.x = 1290
+                                shovel_game.rect.y = 780
+                                print(numero_casilla_prueba)
+                                if(grass.num_grass == numero_casilla_prueba):
+                                    grass.occupied = False
+                                break
 
                     #TO MOVE A WALLNUTT
                     for wallnutt in wallnutt_list:
-                        if wallnutt.rect.colliderect(grass.rect):
+                        if wallnutt.rect.colliderect(grass.rect) and grass.occupied == False:
                             wallnutt.rect.x = grass.rect.x
                             wallnutt.rect.y = grass.rect.y
                             wallnutt.placed = True
                             wallnutt.set_moving(False)
                             grass.occupied = True
+                            wallnutt.num_grass = grass.num_grass
+
+                            shovel_game.set_using(False)
+                            shovel_game.rect.x = 1290
+                            shovel_game.rect.y = 780
                             break
+
+                        elif shovel_collision_rect.colliderect(wallnutt.rect) and shovel_game.using and grass.occupied == True:
+                                numero_casilla_prueba = wallnutt.num_grass
+                                wallnutt.kill()
+                                wallnutt_list.remove(wallnutt)
+                                sun_count += (Wallnutt.COST/2)
+                                shovel_game.set_using(False)
+                                shovel_game.rect.x = 1290
+                                shovel_game.rect.y = 780
+                                print(numero_casilla_prueba)
+                                if(grass.num_grass == numero_casilla_prueba):
+                                    grass.occupied = False
+                                break
 
                     #TO TAKE A SUN WHEN WE CLICK IT
                     for sun in sun_generated_list:
