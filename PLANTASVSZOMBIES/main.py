@@ -199,7 +199,7 @@ while running:
             #WHEN WE RELEASE THE CLICK
             elif event.type == pygame.MOUSEBUTTONUP:
 
-
+                sunflower_collision_rect = pygame.Rect(sunflower.rect.x + 10, sunflower.rect.y + 50, 65, 30)
                 shovel_collision_rect = pygame.Rect(shovel_game.rect.x + 10, shovel_game.rect.y + 50, 65, 30)
 
                 for grass in grass_list:
