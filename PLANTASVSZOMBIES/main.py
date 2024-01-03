@@ -12,6 +12,7 @@ from objects.Peashooter import Peashooter
 from objects.Wallnutt import Wallnutt
 from objects.Sun import Sun
 from objects.Shovel import Shovel
+from objects.Mower import Mower
 #TO RUN THE GAME
 pygame.init()
 
@@ -51,6 +52,7 @@ peashooter_list = []
 wallnutt_list = []
 sun_generated_list = []
 grass_list = []
+mower_list = []
 
 # ITERATION VARIABLES
 NUM_ROW_GRASS = 9;
@@ -59,6 +61,7 @@ grass_width = 80
 grass_height = 95
 start_x = 518
 start_y = 243
+num_mower = 5
 #BACKGROUND
 Background(sprites)
 #CREATION OF BUTTONS TO BUY PLANTS
@@ -78,6 +81,10 @@ for row in range(NUM_COLUMN_GRASS):
 #CREATION OF THE SHOVEL
 shovel_game = Shovel(sprites,X=1290,Y=780,using=False)
 
+#CREATION OF THE MOWERS
+for i in range(num_mower):
+    new_mower = Mower(sprites, X=450, Y= 243 + i * 95, activated=False)
+    mower_list.append(new_mower)
 
 #FUNCTIONS
 
