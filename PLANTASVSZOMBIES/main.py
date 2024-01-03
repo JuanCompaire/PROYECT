@@ -13,6 +13,7 @@ from objects.Wallnutt import Wallnutt
 from objects.Sun import Sun
 from objects.Shovel import Shovel
 from objects.Mower import Mower
+from objects.Zombie import Zombie
 #TO RUN THE GAME
 pygame.init()
 
@@ -53,6 +54,7 @@ wallnutt_list = []
 sun_generated_list = []
 grass_list = []
 mower_list = []
+zombie_list = []
 
 # ITERATION VARIABLES
 NUM_ROW_GRASS = 9;
@@ -86,6 +88,9 @@ for i in range(num_mower):
     new_mower = Mower(sprites, X=450, Y= 243 + i * 95, activated=False)
     mower_list.append(new_mower)
 
+#CREATION OF THE ZOMBIES
+
+zombie1 = Zombie(sprites, X= 100, Y= 500)
 #FUNCTIONS
 
 #GENERATE SUNFLOWER
