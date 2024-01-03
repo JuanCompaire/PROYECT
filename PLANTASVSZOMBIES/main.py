@@ -90,7 +90,9 @@ for i in range(num_mower):
 
 #CREATION OF THE ZOMBIES
 
-zombie1 = Zombie(sprites, X= 100, Y= 500)
+zombie1 = Zombie(sprites, X= 800, Y= 300)
+zombie_list.append(zombie1)
+
 #FUNCTIONS
 
 #GENERATE SUNFLOWER
@@ -137,12 +139,18 @@ while running:
         if gamestarted:
 
             current_time = pygame.time.get_ticks()
-
+            #GENERATE SUN FROM SUNFLOWERS
             for sunflower in sunflower_list:
                 sunflower.generate_suns(current_time)
                 if sunflower.generate_sun:
                     generate_sun()
                     sunflower.generate_sun = False
+            #UPDATE THE ZOMBIES
+            for zombie in zombie_list:
+                zombie.move()
+                if zombie.rect.x <= 0:
+                    zombie.kill()
+                    zombie_list.remove(zombie)
 
             # WHEN WE CLICK
             if event.type == pygame.MOUSEBUTTONDOWN:

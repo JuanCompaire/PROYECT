@@ -1,8 +1,8 @@
 import pygame.sprite
 import assets
 
-WIDTH = 70
-HEIGHT = 70
+WIDTH = 115
+HEIGHT = 115
 class Zombie(pygame.sprite.Sprite):
     HP = 100
     COST = 50
@@ -15,4 +15,7 @@ class Zombie(pygame.sprite.Sprite):
         original_image = assets.get_image("zombie")
         self.image = pygame.transform.scale(original_image, (WIDTH, HEIGHT))
         self.rect = self.image.get_rect(topleft=(X, Y))
+
+    def move(self):
+        self.rect.x -= 1
 
