@@ -81,11 +81,12 @@ for i in range(num_mower):
     new_mower = Mower(sprites, X=450, Y=243 + i * 95, activated=False)
     mower_list.append(new_mower)
 
-
 # CREATION OF THE ZOMBIES
-
-# zombie1 = Zombie(sprites, X= 800, Y= 300)
-# zombie_list.append(zombie1)
+zombie_spawn = [200, 300, 400, 500, 600]
+new_zombie = Zombie(sprites, X= 800, Y=300)
+zombie_list.append(new_zombie)
+zombie_move_counter = 0
+zombie_move_frequency = 5
 
 # FUNCTIONS
 
@@ -115,6 +116,8 @@ def generate_sun():
             sun_generated_list.append(new_sun)
             sunflower.generate_sun = False
 
+
+
 # GAME LOOP
 while running:
     if not gameover:
@@ -125,6 +128,26 @@ while running:
             if sunflower.generate_sun:
                 generate_sun()
                 sunflower.generate_sun = False
+        #ZOMBIES
+        zombie_move_counter += 1
+        if zombie_move_counter >= zombie_move_frequency:
+            for zombie in zombie_list:
+                # ALLOW ZOMBIES TO MOVE
+                zombie.move()
+                #TO CHECK IF ZOMBIE REACH A MOWER
+                for mower in mower_list:
+                    mower.activate()
+                    #hay que modificar donde colisiona con el cortacesped porque la imagen no es el borde como tal
+                    if zombie.rect.colliderect(mower.rect.x-40, mower.rect.y-20, 70, 70):
+                        mower.activated = True
+                        zombie.kill()
+                        zombie_list.remove(zombie)
+                        break
+            #zombie_move_counter = 0
+
+        #MOWERS
+
+
         # EVENTS
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -16,3 +16,9 @@ class Mower(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(original_image, (WIDTH, HEIGHT))
         self.rect = self.image.get_rect(topleft=(X, Y))
 
+    def activate(self):
+        if self.activated == True:
+            self.rect.x += 1
+
+
+
