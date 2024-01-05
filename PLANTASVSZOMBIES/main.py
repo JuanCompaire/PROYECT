@@ -13,10 +13,11 @@ from objects.Sun import Sun
 from objects.Shovel import Shovel
 from objects.Mower import Mower
 from objects.Zombie import Zombie
-#TO RUN THE GAME
+
+# TO RUN THE GAME
 pygame.init()
 
-screen = pygame.display.set_mode((configs.SCREEN_WIDTH,configs.SCREEN_HEIGHT))
+screen = pygame.display.set_mode((configs.SCREEN_WIDTH, configs.SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
 gameover = False
@@ -28,16 +29,16 @@ assets.load_gif()
 
 sprites = pygame.sprite.LayeredUpdates()
 
-#SUNS COUNT
+# SUNS COUNT
 sun_count = 200
 sun_count_image = assets.get_image("sol")
 sun_count_image = pygame.transform.scale(sun_count_image, (50, 50))
 font_sun_count = pygame.font.Font(None, 36)
-sun_count_color = (0,0, 0)
-#NOT ENOUGH SUNS INDICATOR
+sun_count_color = (0, 0, 0)
+# NOT ENOUGH SUNS INDICATOR
 not_enough_sun_color = (255, 0, 0)
 
-#OBJECTS LIST
+# OBJECTS LIST
 sunflower_list = []
 peashooter_list = []
 wallnutt_list = []
@@ -45,6 +46,8 @@ sun_generated_list = []
 grass_list = []
 mower_list = []
 zombie_list = []
+
+moving_plant = None
 
 # ITERATION VARIABLES
 NUM_ROW_GRASS = 9;
@@ -54,13 +57,13 @@ grass_height = 95
 start_x = 518
 start_y = 243
 num_mower = 5
-#BACKGROUND
+# BACKGROUND
 Background(sprites)
-#CREATION OF BUTTONS TO BUY PLANTS
-purchase_button_Peashotter = Purchase_button(sprites, image_name="planta_militar_compra",X=550,Y=20)
-purchase_button_Sunflower = Purchase_button(sprites,image_name="sunflower_purchase",X=700,Y=20)
-purchase_button_Wallnutt = Purchase_button(sprites,image_name="wallnutt_purchase",X=850,Y=20)
-#CREATION OF THE GRASS SQUARES
+# CREATION OF BUTTONS TO BUY PLANTS
+purchase_button_Peashotter = Purchase_button(sprites, image_name="planta_militar_compra", X=550, Y=20)
+purchase_button_Sunflower = Purchase_button(sprites, image_name="sunflower_purchase", X=700, Y=20)
+purchase_button_Wallnutt = Purchase_button(sprites, image_name="wallnutt_purchase", X=850, Y=20)
+# CREATION OF THE GRASS SQUARES
 
 for row in range(NUM_COLUMN_GRASS):
     for col in range(NUM_ROW_GRASS):
@@ -70,36 +73,41 @@ for row in range(NUM_COLUMN_GRASS):
         new_grass = Grass(sprites, num_grass=grass_number, occupied=False, X=grass_x, Y=grass_y)
         grass_list.append(new_grass)
 
-#CREATION OF THE SHOVEL
-shovel_game = Shovel(sprites,X=1290,Y=780,using=False)
+# CREATION OF THE SHOVEL
+shovel_game = Shovel(sprites, X=1290, Y=780, using=False)
 
-#CREATION OF THE MOWERS
+# CREATION OF THE MOWERS
 for i in range(num_mower):
-    new_mower = Mower(sprites, X=450, Y= 243 + i * 95, activated=False)
+    new_mower = Mower(sprites, X=450, Y=243 + i * 95, activated=False)
     mower_list.append(new_mower)
 
-#CREATION OF THE ZOMBIES
 
-#zombie1 = Zombie(sprites, X= 800, Y= 300)
-#zombie_list.append(zombie1)
+# CREATION OF THE ZOMBIES
 
-#FUNCTIONS
+# zombie1 = Zombie(sprites, X= 800, Y= 300)
+# zombie_list.append(zombie1)
 
-#GENERATE SUNFLOWER
+# FUNCTIONS
+
+# GENERATE SUNFLOWER
 def generate_sunflower():
     new_sunflower = Sunflower(sprites, X=720, Y=130, placed=False)
     sunflower_list.append(new_sunflower)
 
-#GENERATE PEASHOOTER
+
+# GENERATE PEASHOOTER
 def generate_peashooter():
     new_peashooter = Peashooter(sprites, X=570, Y=130, placed=False)
     peashooter_list.append(new_peashooter)
 
-#GENERATE WALLNUTT
+
+# GENERATE WALLNUTT
 def generate_wallnutt():
     new_wallnutt = Wallnutt(sprites, X=870, Y=130, placed=False)
     wallnutt_list.append(new_wallnutt)
-#GENERATE SUNS FROM SUNFLOWERS
+
+
+# GENERATE SUNS FROM SUNFLOWERS
 def generate_sun():
     for sunflower in sunflower_list:
         if sunflower.generate_sun:
@@ -107,9 +115,8 @@ def generate_sun():
             sun_generated_list.append(new_sun)
             sunflower.generate_sun = False
 
-#GAME LOOP
+# GAME LOOP
 while running:
-
     if not gameover:
         current_time = pygame.time.get_ticks()
         # GENERATE SUN FROM SUNFLOWERS
@@ -118,7 +125,7 @@ while running:
             if sunflower.generate_sun:
                 generate_sun()
                 sunflower.generate_sun = False
-        #EVENTS
+        # EVENTS
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -135,7 +142,7 @@ while running:
                         if grass.rect.collidepoint(event.pos):
                             print(grass.num_grass)
                             print(grass.occupied)
-                    #TO BUY A PLANT
+                    # TO BUY A PLANT
                     # TO GENERATE A SUNFLOWER WHEN WE PURCHASE IT
                     if purchase_button_Sunflower.rect.collidepoint(event.pos) and sun_count >= Sunflower.COST:
                         generate_sunflower()
@@ -152,21 +159,27 @@ while running:
                         sun_count -= Wallnutt.COST
                         not_enough_sun = False
                     # WHEN YOU DON´T HAVE ENOUGH SUNS
-                    elif purchase_button_Sunflower.rect.collidepoint(event.pos) and sun_count < Sunflower.COST or purchase_button_Peashotter.rect.collidepoint(event.pos) and sun_count < Peashooter.COST or purchase_button_Wallnutt.rect.collidepoint(event.pos) and sun_count < Wallnutt.COST:
+                    elif purchase_button_Sunflower.rect.collidepoint(
+                            event.pos) and sun_count < Sunflower.COST or purchase_button_Peashotter.rect.collidepoint(
+                            event.pos) and sun_count < Peashooter.COST or purchase_button_Wallnutt.rect.collidepoint(
+                            event.pos) and sun_count < Wallnutt.COST:
                         not_enough_sun = True
-                    #TO MOVE PLANTS
+                    # TO MOVE PLANTS
                     # TO MOVE A SUNFLOWER
                     for sunflower in sunflower_list:
                         if sunflower.rect.collidepoint(event.pos) and sunflower.placed == False:
                             sunflower.set_moving(True)
+                            moving_plant = sunflower
                     # TO MOVE A PEASHOOTER
                     for peashooter in peashooter_list:
                         if peashooter.rect.collidepoint(event.pos) and peashooter.placed == False:
                             peashooter.set_moving(True)
+                            moving_plant = peashooter
                     # TO MOVE A WALLNUTT
                     for wallnutt in wallnutt_list:
                         if wallnutt.rect.collidepoint(event.pos) and wallnutt.placed == False:
                             wallnutt.set_moving(True)
+                            moving_plant = wallnutt
             # WHEN DRAG
             elif event.type == pygame.MOUSEMOTION:
                 # TO MOVE THE SHOVEL
@@ -188,91 +201,50 @@ while running:
             elif event.type == pygame.MOUSEBUTTONUP:
                 shovel_collision_rect = pygame.Rect(shovel_game.rect.x + 10, shovel_game.rect.y + 50, 65, 30)
                 for grass in grass_list:
-                    # TO MOVE A SUNFLOWER
-                    for sunflower in sunflower_list:
-                        if sunflower.rect.colliderect(grass.rect) and grass.occupied == False:
-                            sunflower.rect.x = grass.rect.x
-                            sunflower.rect.y = grass.rect.y
-                            sunflower.placed = True
-                            sunflower.set_moving(False)
+                    # TO MOVE A PLANT
+                    if moving_plant:
+                        if moving_plant.rect.colliderect(grass.rect) and grass.occupied == False:
+                            moving_plant.rect.x = grass.rect.x
+                            moving_plant.rect.y = grass.rect.y
+                            moving_plant.placed = True
+                            moving_plant.set_moving(False)
                             grass.occupied = True
-                            sunflower.num_grass = grass.num_grass
+                            moving_plant.num_grass = grass.num_grass
 
                             shovel_game.set_using(False)
                             shovel_game.rect.x = 1290
                             shovel_game.rect.y = 780
                             break
-
-                        elif shovel_collision_rect.colliderect(sunflower.rect) and shovel_game.using and grass.occupied == True:
-                            sunflower.kill()
-                            sunflower_list.remove(sunflower)
-                            sun_count += (Sunflower.COST / 2)
-                            shovel_game.set_using(False)
-                            shovel_game.rect.x = 1290
-                            shovel_game.rect.y = 780
-                            if(grass.num_grass == sunflower.num_grass):
+                    #TO REMOVE A PLANT
+                    if (shovel_collision_rect.colliderect(grass.rect) and grass.occupied == True):
+                        for sunflower in sunflower_list:
+                            if sunflower.num_grass == grass.num_grass:
+                                sunflower.kill()
+                                sunflower_list.remove(sunflower)
+                                sun_count += (Sunflower.COST/2)
                                 grass.occupied = False
-
-                            break
-
-                    # TO MOVE A PEASHOOTER
-                    for peashooter in peashooter_list:
-                        if peashooter.rect.colliderect(grass.rect) and grass.occupied == False:
-                            peashooter.rect.x = grass.rect.x
-                            peashooter.rect.y = grass.rect.y
-                            peashooter.placed = True
-                            peashooter.set_moving(False)
-                            grass.occupied = True
-                            peashooter.num_grass = grass.num_grass
-
-                            shovel_game.set_using(False)
-                            shovel_game.rect.x = 1290
-                            shovel_game.rect.y = 780
-                            break
-
-                        elif shovel_collision_rect.colliderect(peashooter.rect) and shovel_game.using and grass.occupied == True:
-                            peashooter.kill()
-                            peashooter_list.remove(peashooter)
-                            sun_count += (Peashooter.COST / 2)
-                            shovel_game.set_using(False)
-                            shovel_game.rect.x = 1290
-                            shovel_game.rect.y = 780
-                            if (grass.num_grass == peashooter.num_grass):
+                                break
+                        for peashooter in peashooter_list:
+                            if peashooter.num_grass == grass.num_grass:
+                                peashooter.kill()
+                                peashooter_list.remove(peashooter)
+                                sun_count += (Peashooter.COST/2)
                                 grass.occupied = False
-                            break
-
-                    # TO MOVE A WALLNUTT
-                    for wallnutt in wallnutt_list:
-                        if wallnutt.rect.colliderect(grass.rect) and grass.occupied == False:
-                            wallnutt.rect.x = grass.rect.x
-                            wallnutt.rect.y = grass.rect.y
-                            wallnutt.placed = True
-                            wallnutt.set_moving(False)
-                            grass.occupied = True
-                            wallnutt.num_grass = grass.num_grass
-
-                            shovel_game.set_using(False)
-                            shovel_game.rect.x = 1290
-                            shovel_game.rect.y = 780
-                            break
-
-                        elif shovel_collision_rect.colliderect(wallnutt.rect) and shovel_game.using and grass.occupied == True:
-                            wallnutt.kill()
-                            wallnutt_list.remove(wallnutt)
-                            sun_count += (Wallnutt.COST / 2)
-                            shovel_game.set_using(False)
-                            shovel_game.rect.x = 1290
-                            shovel_game.rect.y = 780
-                            if (grass.num_grass == wallnutt.num_grass):
+                                break
+                        for wallnutt in wallnutt_list:
+                            if wallnutt.num_grass == grass.num_grass:
+                                wallnutt.kill()
+                                wallnutt_list.remove(wallnutt)
+                                sun_count += (Wallnutt.COST/2)
                                 grass.occupied = False
-                            break
+                                break
 
-                    # TO TAKE A SUN WHEN WE CLICK IT
-                    for sun in sun_generated_list:
-                        if sun.rect.collidepoint(event.pos):
-                            sun.kill()
-                            sun_count += Sun.sun_points
-                            sun_generated_list.remove(sun)
+                # TO TAKE A SUN WHEN WE CLICK IT
+                for sun in sun_generated_list:
+                    if sun.rect.collidepoint(event.pos):
+                        sun.kill()
+                        sun_count += Sun.sun_points
+                        sun_generated_list.remove(sun)
 
                 # TO STOP USING THE SHOVEL
                 if shovel_game.using:
@@ -280,26 +252,22 @@ while running:
                     shovel_game.rect.y = 780
                     shovel_game.set_using(False)
 
-
-
-
-    #TO SHOW THE BACKGROUND
+    # TO SHOW THE BACKGROUND
     screen.fill("orange")
 
     sprites.draw(screen)
-    #TO SHOW THE SUNS COUNT
+    # TO SHOW THE SUNS COUNT
     screen.blit(sun_count_image, (1150, 20))
 
-    #TO SHOW THE SHOVEL BUTTON
+    # TO SHOW THE SHOVEL BUTTON
     shovel_button = assets.get_image("pala")
     shovel_button = pygame.transform.scale(shovel_button, (85, 85))
     screen.blit(shovel_button, (1290, 780))
 
-
     sun_count_text = font_sun_count.render(str(sun_count), True, sun_count_color)
     screen.blit(sun_count_text, (1100, 35))
 
-    #TO SHOW NOT ENOUGH SUNS
+    # TO SHOW NOT ENOUGH SUNS
     if not_enough_sun:
         not_enough_sun_text = font_sun_count.render("NOT ENOUGH SUNS", True, not_enough_sun_color)
         screen.blit(not_enough_sun_text, (1050, 85))
@@ -311,4 +279,3 @@ while running:
     clock.tick(configs.FPS)
 
 pygame.quit()
-
