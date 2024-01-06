@@ -83,8 +83,10 @@ for i in range(num_mower):
 
 # CREATION OF THE ZOMBIES
 zombie_spawn = [200, 300, 400, 500, 600]
-new_zombie = Zombie(sprites, X= 800, Y=300)
-zombie_list.append(new_zombie)
+for i in range(3):
+    new_zombie = Zombie(sprites, X=800+(i*150), Y=zombie_spawn[3])
+    zombie_list.append(new_zombie)
+
 zombie_move_counter = 0
 zombie_move_frequency = 5
 
@@ -95,18 +97,15 @@ def generate_sunflower():
     new_sunflower = Sunflower(sprites, X=720, Y=130, placed=False)
     sunflower_list.append(new_sunflower)
 
-
 # GENERATE PEASHOOTER
 def generate_peashooter():
     new_peashooter = Peashooter(sprites, X=570, Y=130, placed=False)
     peashooter_list.append(new_peashooter)
 
-
 # GENERATE WALLNUTT
 def generate_wallnutt():
     new_wallnutt = Wallnutt(sprites, X=870, Y=130, placed=False)
     wallnutt_list.append(new_wallnutt)
-
 
 # GENERATE SUNS FROM SUNFLOWERS
 def generate_sun():
@@ -115,8 +114,6 @@ def generate_sun():
             new_sun = Sun(sprites, X=sunflower.rect.x + 50, Y=sunflower.rect.y - 30)
             sun_generated_list.append(new_sun)
             sunflower.generate_sun = False
-
-
 
 # GAME LOOP
 while running:
@@ -136,9 +133,9 @@ while running:
                 zombie.move()
                 #TO CHECK IF ZOMBIE REACH A MOWER
                 for mower in mower_list:
-                    mower.activate()
+                    zombie_rect_collision = pygame.Rect(zombie.rect.x + 10, zombie.rect.y + 50, 115, 115)
                     #hay que modificar donde colisiona con el cortacesped porque la imagen no es el borde como tal
-                    if zombie.rect.colliderect(mower.rect.x-40, mower.rect.y-20, 70, 70):
+                    if zombie_rect_collision.colliderect(mower.rect):
                         mower.activated = True
                         zombie.kill()
                         zombie_list.remove(zombie)
@@ -146,6 +143,8 @@ while running:
             #zombie_move_counter = 0
 
         #MOWERS
+        for mower in mower_list:
+            mower.activate()
 
 
         # EVENTS

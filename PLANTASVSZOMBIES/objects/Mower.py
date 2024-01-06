@@ -17,7 +17,7 @@ class Mower(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(X, Y))
 
     def activate(self):
-        if self.activated == True:
+        if self.activated:
             self.rect.x += 1
 
 
