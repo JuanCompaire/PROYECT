@@ -18,7 +18,7 @@ class Mower(pygame.sprite.Sprite):
 
     def activate(self):
         if self.activated:
-            self.rect.x += 1
+            self.rect.x += 4
 
 
 

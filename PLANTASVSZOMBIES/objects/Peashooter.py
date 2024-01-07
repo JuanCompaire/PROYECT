@@ -23,8 +23,10 @@ class Peashooter(pygame.sprite.Sprite):
         self.rect.x = x -(WIDTH/2)
         self.rect.y = y -(HEIGHT/2)
 
-
     def set_moving(self, value):
         self.moving = value
+
+    def attack(self):
+        pass
 
 

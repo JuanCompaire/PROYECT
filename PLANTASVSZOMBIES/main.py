@@ -13,6 +13,7 @@ from objects.Sun import Sun
 from objects.Shovel import Shovel
 from objects.Mower import Mower
 from objects.Zombie import Zombie
+from objects.Pea import Pea
 
 # TO RUN THE GAME
 pygame.init()
@@ -46,6 +47,7 @@ sun_generated_list = []
 grass_list = []
 mower_list = []
 zombie_list = []
+pea_list = []
 
 moving_plant = None
 
@@ -83,12 +85,13 @@ for i in range(num_mower):
 
 # CREATION OF THE ZOMBIES
 zombie_spawn = [200, 300, 400, 500, 600]
-for i in range(3):
-    new_zombie = Zombie(sprites, X=800+(i*150), Y=zombie_spawn[3])
-    zombie_list.append(new_zombie)
+#CREATE LOGIC TO MAKE ZOMBIES WAVES
 
 zombie_move_counter = 0
 zombie_move_frequency = 5
+
+#CREATION OF PEA MUNITION
+pea_trial = Pea(sprites, X=600, Y=300)
 
 # FUNCTIONS
 
@@ -115,10 +118,20 @@ def generate_sun():
             sun_generated_list.append(new_sun)
             sunflower.generate_sun = False
 
+#CHECK IF ZOMBIES TOUCH GRASS
+def check_zombies_in_grass():
+    for grass in grass_list:
+        for zombie in zombie_list:
+            if grass.rect.colliderect(zombie.rect):
+                print("ZOMBIE IN GRASS")
+
 # GAME LOOP
 while running:
     if not gameover:
         current_time = pygame.time.get_ticks()
+
+        pea_trial.move()
+        check_zombies_in_grass()
         # GENERATE SUN FROM SUNFLOWERS
         for sunflower in sunflower_list:
             sunflower.generate_suns(current_time)
@@ -133,7 +146,7 @@ while running:
                 zombie.move()
                 #TO CHECK IF ZOMBIE REACH A MOWER
                 for mower in mower_list:
-                    zombie_rect_collision = pygame.Rect(zombie.rect.x + 10, zombie.rect.y + 50, 115, 115)
+                    zombie_rect_collision = pygame.Rect(zombie.rect.x + 10, zombie.rect.y + 15, 115, 115)
                     #hay que modificar donde colisiona con el cortacesped porque la imagen no es el borde como tal
                     if zombie_rect_collision.colliderect(mower.rect):
                         mower.activated = True
