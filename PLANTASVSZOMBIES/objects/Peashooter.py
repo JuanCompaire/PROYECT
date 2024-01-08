@@ -1,7 +1,6 @@
 import pygame.sprite
 import assets
 
-
 WIDTH = 70
 HEIGHT = 70
 
@@ -10,6 +9,7 @@ class Peashooter(pygame.sprite.Sprite):
     HP = 100
     COST = 100
     moving = False
+    attacking = False
     def __init__(self, *groups, X, Y,placed):
         super().__init__(*groups)
         self.X = X
@@ -26,7 +26,13 @@ class Peashooter(pygame.sprite.Sprite):
     def set_moving(self, value):
         self.moving = value
 
-    def attack(self):
-        pass
+    def set_attacking(self,value):
+        self.attacking = value
+
+
+
+
+
+
 
 

@@ -87,11 +87,13 @@ for i in range(num_mower):
 zombie_spawn = [200, 300, 400, 500, 600]
 #CREATE LOGIC TO MAKE ZOMBIES WAVES
 
+zombie1 = Zombie(sprites,X=800,Y=zombie_spawn[3])
+zombie_list.append(zombie1)
+
 zombie_move_counter = 0
 zombie_move_frequency = 5
 
 #CREATION OF PEA MUNITION
-pea_trial = Pea(sprites, X=600, Y=300)
 
 # FUNCTIONS
 
@@ -124,13 +126,21 @@ def check_zombies_in_grass():
         for zombie in zombie_list:
             if grass.rect.colliderect(zombie.rect):
                 print("ZOMBIE IN GRASS")
+                for peashooter in peashooter_list:
+                    peashooter.set_attacking(True)
+            
+
+def attack_peashooter():
+    for peashooters in peashooter_list:
+        if peashooters.placed and peashooters.attacking:
+            new_pea = Pea(sprites,X=peashooters.rect.x+50,Y=peashooters.rect.y+50)
+            pea_list.append(new_pea)
 
 # GAME LOOP
 while running:
     if not gameover:
         current_time = pygame.time.get_ticks()
 
-        pea_trial.move()
         check_zombies_in_grass()
         # GENERATE SUN FROM SUNFLOWERS
         for sunflower in sunflower_list:
@@ -158,12 +168,26 @@ while running:
         #MOWERS
         for mower in mower_list:
             mower.activate()
+        #PEASHOOTER
+
+
+        #PEA
+        for pea in pea_list:
+            pea.move()
+
+
 
 
         # EVENTS
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            #PEASHOTER TRYING TO SHOOT
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    for peashoter in peashooter_list:
+                        attack_peashooter()
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     # TO GET THE SHOVEL CLICKING ON SHOVEL BUTTON
