@@ -87,7 +87,7 @@ for i in range(num_mower):
 zombie_spawn = [200, 300, 400, 500, 600]
 #CREATE LOGIC TO MAKE ZOMBIES WAVES
 
-zombie1 = Zombie(sprites,X=800,Y=zombie_spawn[3])
+zombie1 = Zombie(sprites,X=1400,Y=zombie_spawn[3])
 zombie_list.append(zombie1)
 
 zombie_move_counter = 0
@@ -122,18 +122,29 @@ def generate_sun():
 
 #CHECK IF ZOMBIES TOUCH GRASS
 def check_zombies_in_grass():
-    for grass in grass_list:
-        for zombie in zombie_list:
-            if grass.rect.colliderect(zombie.rect):
-                print("ZOMBIE IN GRASS")
-                for peashooter in peashooter_list:
-                    peashooter.set_attacking(True)
-            
+    zombie_grass = False
+
+    for zombie in zombie_list:
+        for grass in grass_list:
+            if zombie.rect.colliderect(grass.rect):
+                print("zombie tocando cespedm")
+                zombie_grass = True
+                break
+            else:
+                zombie_grass = False
+    if zombie_grass:
+       for peashooter in peashooter_list:
+            peashooter.set_attacking(True)
+            print("peashooter atacando")
+    if not zombie_grass:
+        for peashooter in peashooter_list:
+            peashooter.set_attacking(False)
+            print("peashooter no atacando")
 
 def attack_peashooter():
     for peashooters in peashooter_list:
         if peashooters.placed and peashooters.attacking:
-            new_pea = Pea(sprites,X=peashooters.rect.x+50,Y=peashooters.rect.y+50)
+            new_pea = Pea(sprites,X=peashooters.rect.x+50,Y=peashooters.rect.y+10)
             pea_list.append(new_pea)
 
 # GAME LOOP
@@ -169,7 +180,8 @@ while running:
         for mower in mower_list:
             mower.activate()
         #PEASHOOTER
-
+        for peashooter in peashooter_list:
+            attack_peashooter()
 
         #PEA
         for pea in pea_list:
@@ -184,10 +196,7 @@ while running:
                 running = False
             #PEASHOTER TRYING TO SHOOT
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    for peashoter in peashooter_list:
-                        attack_peashooter()
-
+                pass
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     # TO GET THE SHOVEL CLICKING ON SHOVEL BUTTON
